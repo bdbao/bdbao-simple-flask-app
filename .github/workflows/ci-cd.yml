@@ -27,7 +27,8 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest tests/
+        export PYTHONPATH=$(pwd)/app
+        run: pytest --maxfail=1 --disable-warnings tests/
 
   deploy:
     name: Deploy to Heroku
