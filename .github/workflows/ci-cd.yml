@@ -1,3 +1,59 @@
+# name: CI/CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - main
+
+# jobs:
+#   test:
+#     name: Run Tests
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v4
+#         with:
+#           python-version: 3.9
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           pip install -r requirements.txt
+      
+#       - name: Run tests
+#         run: |
+#           export PYTHONPATH=$(pwd)
+#           pytest --maxfail=1 --disable-warnings tests/
+
+#   deploy:
+#     name: Deploy to Heroku
+#     needs: test
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Deploy to Heroku
+#         env:
+#           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+#         run: |
+#           # Install Heroku CLI
+#           curl https://cli-assets.heroku.com/install.sh | sh
+
+#           echo $HEROKU_API_KEY | heroku auth:token
+#           # Set the remote git repository for Heroku
+#           heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+
+#           # Push code to Heroku
+#           git push heroku main
+
+
 name: CI/CD Pipeline
 
 on:
@@ -25,11 +81,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      
+
       - name: Run tests
-        run: |
-          export PYTHONPATH=$(pwd)
-          pytest --maxfail=1 --disable-warnings tests/
+        run: pytest tests/
 
   deploy:
     name: Deploy to Heroku
@@ -39,16 +93,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Deploy to Heroku
+      - name: Install Heroku CLI
+        run: |
+          curl https://cli-assets.heroku.com/install.sh | sh
+
+      - name: Set up authentication with Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
-          # Install Heroku CLI
-          curl https://cli-assets.heroku.com/install.sh | sh
+          # Write Heroku API key to .netrc for Git authentication
+          echo "machine api.heroku.com" >> ~/.netrc
+          echo "  login $HEROKU_API_KEY" >> ~/.netrc
+          echo "machine git.heroku.com" >> ~/.netrc
+          echo "  login $HEROKU_API_KEY" >> ~/.netrc
 
-          echo $HEROKU_API_KEY | heroku auth:token
-          # Set the remote git repository for Heroku
+      - name: Set the remote Heroku app
+        run: |
+          # Set the Heroku git remote for the app
           heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
 
-          # Push code to Heroku
+      - name: Push to Heroku
+        run: |
+          # Push the code to Heroku
           git push heroku main
