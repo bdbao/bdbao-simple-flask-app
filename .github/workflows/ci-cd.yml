@@ -31,8 +31,6 @@ jobs:
           export PYTHONPATH=$(pwd)
           pytest --maxfail=1 --disable-warnings tests/
 
-      
-
   deploy:
     name: Deploy to Heroku
     needs: test
@@ -46,5 +44,10 @@ jobs:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
         run: |
           curl https://cli-assets.heroku.com/install.sh | sh
+          echo "machine api.heroku.com" >> ~/.netrc
+          echo "  login $HEROKU_API_KEY" >> ~/.netrc
+          echo "machine git.heroku.com" >> ~/.netrc
+          echo "  login $HEROKU_API_KEY" >> ~/.netrc
           heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
           git push heroku main
+          
