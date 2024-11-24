@@ -29,6 +29,13 @@ jobs:
       - name: Run tests
         export PYTHONPATH=$(pwd)/app
         run: pytest --maxfail=1 --disable-warnings tests/
+      
+      - name: Run tests
+        run: |
+          export PYTHONPATH=$(pwd)
+          pytest --maxfail=1 --disable-warnings tests/
+
+      
 
   deploy:
     name: Deploy to Heroku
