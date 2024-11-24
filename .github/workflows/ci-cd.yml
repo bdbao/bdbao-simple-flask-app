@@ -46,11 +46,7 @@ jobs:
           # Install Heroku CLI
           curl https://cli-assets.heroku.com/install.sh | sh
 
-          # Set up the .netrc file for git authentication with Heroku
-          echo "machine git.heroku.com" > ~/.netrc
-          echo "login $HEROKU_API_KEY" >> ~/.netrc
-          echo "password $HEROKU_API_KEY" >> ~/.netrc
-
+          echo $HEROKU_API_KEY | heroku auth:token
           # Set the remote git repository for Heroku
           heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
 
