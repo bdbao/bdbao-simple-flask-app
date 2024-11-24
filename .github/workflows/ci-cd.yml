@@ -79,6 +79,7 @@ jobs:
         run: |
           # Set the Heroku git remote for the app
           git remote add heroku https://git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git
+          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
 
       - name: Push to Heroku
         run: |
