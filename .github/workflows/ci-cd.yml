@@ -84,4 +84,4 @@ jobs:
       - name: Push to Heroku
         run: |
           # Push the code to Heroku
-          GIT_TRACE=1 GIT_CURL_VERBOSE=1 git push heroku main
+          git push heroku main
