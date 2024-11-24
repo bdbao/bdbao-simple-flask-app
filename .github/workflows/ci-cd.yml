@@ -84,6 +84,8 @@ jobs:
 
       - name: Push to Heroku
         run: |
+          git config --global user.email "baobuiduy.vn@gmail.com"
+          git config --global user.name "bdbao"
           # git pull heroku main
           git pull https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git main --allow-unrelated-histories --no-rebase
           # Push the code to Heroku
