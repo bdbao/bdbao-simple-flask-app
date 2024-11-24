@@ -84,7 +84,8 @@ jobs:
 
       - name: Push to Heroku
         run: |
-          git pull heroku main
+          # git pull heroku main
+          git pull https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git main
           # Push the code to Heroku
           # git push heroku main
           git push https://heroku:${{ secrets.HEROKU_API_KEY }}@git.heroku.com/${{ secrets.HEROKU_APP_NAME }}.git main
